@@ -42,4 +42,12 @@ jobs:
             --keep-old \
             --fail-fast \
             --skip-recursive-dependents \
-            --root-url="https://github.com/${TAP_REPO}/releases/download/${TAG_NA
+            --root-url="https://github.com/${TAP_REPO}/releases/download/${TAG_NAME}"
+
+      - name: Upload bottles to the tag release
+        uses: softprops/action-gh-release@v2
+        if: always()  # publish artifacts even if one arch fails, so you can diagnose
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: "*.bottle.*"
+          generate_release_notes: false
