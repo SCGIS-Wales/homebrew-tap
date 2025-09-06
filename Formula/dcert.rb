@@ -1,8 +1,8 @@
 class Dcert < Formula
   desc "CLI to decode and validate TLS certificates from PEM files"
   homepage "https://github.com/SCGIS-Wales/dcert"
-  url "https://github.com/SCGIS-Wales/dcert/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "67b6a577ed70174dbab50f9c2d9df58a7714d4610488d0bdddeee441b7961efb"
+  url "https://github.com/SCGIS-Wales/dcert/archive/refs/tags/v0.1.1.tar.gz"
+  sha256 "d5558cd419c8d46bdc958064cb97f963d1ea793866414c025906ec15033512ed"
   license "MIT"
 
   depends_on "rust" => :build
