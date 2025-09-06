@@ -1,3 +1,4 @@
+# .github/workflows/bottles.yml
 name: Build Homebrew bottles
 
 on:
@@ -24,11 +25,16 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Style and audit formula
+        env:
+          TAP_REPO: ${{ github.repository }}   # e.g. scgis-wales/homebrew-tap
+          FORMULA: dcert
         run: |
           set -euo pipefail
           brew update
-          brew style --fix .
-          brew audit --formula --online --strict Formula/dcert.rb
+          # Style can take a path or a name. Using the name is future proof.
+          brew style --fix "$FORMULA"
+          # Audit must not use a path. Audit the tap, or just the formula by name.
+          brew audit --formula --online --strict --tap="$TAP_REPO"
 
       - name: Build bottle with test-bot
         env:
@@ -46,7 +52,7 @@ jobs:
 
       - name: Upload bottles to the tag release
         uses: softprops/action-gh-release@v2
-        if: always()  # publish artifacts even if one arch fails, so you can diagnose
+        if: always()
         with:
           tag_name: ${{ github.ref_name }}
           files: "*.bottle.*"
