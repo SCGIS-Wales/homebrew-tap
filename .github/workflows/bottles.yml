@@ -1,39 +1,45 @@
-# .github/workflows/bottles.yml in SCGIS-Wales/homebrew-tap
 name: Build Homebrew bottles
 
 on:
   push:
-    tags: ["v*"]   # run when you tag a release in the main repo
+    tags: ["v*"]
+  workflow_dispatch:
 
 jobs:
   bottle:
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-13, macos-14]   # 13 ≈ Intel, 14 ≈ Apple Silicon
+        runner: [macos-13, macos-14]  # 13 ≈ Intel, 14 ≈ Apple Silicon
     runs-on: ${{ matrix.runner }}
+
+    permissions:
+      contents: write
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout tap
+        uses: actions/checkout@v4
 
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Style and audit
+      - name: Style and audit formula
         run: |
+          set -euo pipefail
           brew update
           brew style --fix .
           brew audit --formula --online --strict Formula/dcert.rb
 
-      - name: Build bottle
-        run: |
-          brew test-bot --only-formulae --tap=$GITHUB_REPOSITORY \
-            --keep-old --fail-fast \
-            --root-url=https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}
-
-      - name: Upload bottles
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: "*.bottle.*"
+      - name: Build bottle with test-bot
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAP_REPO: ${{ github.repository }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          brew test-bot \
+            --only-formulae \
+            --tap="$TAP_REPO" \
+            --keep-old \
+            --fail-fast \
+            --skip-recursive-dependents \
+            --root-url="https://github.com/${TAP_REPO}/releases/download/${TAG_NA
