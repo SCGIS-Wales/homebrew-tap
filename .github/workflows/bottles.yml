@@ -1,4 +1,3 @@
-# .github/workflows/bottles.yml
 name: Build Homebrew bottles
 
 on:
@@ -26,20 +25,17 @@ jobs:
 
       - name: Style and audit formula
         env:
-          TAP_REPO: ${{ github.repository }}   # e.g. scgis-wales/homebrew-tap
           FORMULA: dcert
         run: |
           set -euo pipefail
           brew update
-          # Style can take a path or a name. Using the name is future proof.
           brew style --fix "$FORMULA"
-          # Audit must not use a path. Audit the tap, or just the formula by name.
-          brew audit --formula --online --strict --tap="$TAP_REPO"
+          brew audit --formula --online --strict "$FORMULA"
 
       - name: Build bottle with test-bot
         env:
-          TAP_REPO: ${{ github.repository }}
-          TAG_NAME: ${{ github.ref_name }}
+          TAP_REPO: ${{ github.repository }}     # e.g. scgis-wales/homebrew-tap
+          TAG_NAME: ${{ github.ref_name }}       # e.g. v0.1.1
         run: |
           set -euo pipefail
           brew test-bot \
