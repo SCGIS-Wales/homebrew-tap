@@ -7,24 +7,32 @@ class Dcert < Formula
   on_macos do
     on_intel do
       url "https://github.com/SCGIS-Wales/dcert/releases/download/v1.0.0/dcert-x86_64-apple-darwin.tar.gz"
-      sha256 "MACOS_X86_SHA256_PLACEHOLDER"
+      sha256 "REPLACE_WITH_ACTUAL_MACOS_X86_SHA256"
+
+      def install
+        bin.install "dcert"
+      end
     end
 
     on_arm do
       url "https://github.com/SCGIS-Wales/dcert/releases/download/v1.0.0/dcert-aarch64-apple-darwin.tar.gz"
-      sha256 "MACOS_ARM_SHA256_PLACEHOLDER"
+      sha256 "REPLACE_WITH_ACTUAL_MACOS_ARM_SHA256"
+
+      def install
+        bin.install "dcert"
+      end
     end
   end
 
   on_linux do
     on_intel do
       url "https://github.com/SCGIS-Wales/dcert/releases/download/v1.0.0/dcert-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "LINUX_X86_SHA256_PLACEHOLDER"
-    end
-  end
+      sha256 "REPLACE_WITH_ACTUAL_LINUX_X86_SHA256"
 
-  def install
-    bin.install "dcert"
+      def install
+        bin.install "dcert"
+      end
+    end
   end
 
   test do
