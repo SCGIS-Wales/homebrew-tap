@@ -1,15 +1,30 @@
 class Dcert < Formula
   desc "CLI to decode and validate TLS certificates from PEM files"
   homepage "https://github.com/SCGIS-Wales/dcert"
-  url "https://github.com/SCGIS-Wales/dcert/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "749beb3509ccff0f84bc94acc6ed4ad15ada2bb54f618a1573c9aada1f59f48b"
+  version "1.0.0"
   license "MIT"
-  head "https://github.com/SCGIS-Wales/dcert.git", branch: "main"
 
-  depends_on "rust" => :build
+  on_macos do
+    on_intel do
+      url "https://github.com/SCGIS-Wales/dcert/releases/download/v1.0.0/dcert-x86_64-apple-darwin.tar.gz"
+      sha256 "MACOS_X86_SHA256_PLACEHOLDER"
+    end
+
+    on_arm do
+      url "https://github.com/SCGIS-Wales/dcert/releases/download/v1.0.0/dcert-aarch64-apple-darwin.tar.gz"
+      sha256 "MACOS_ARM_SHA256_PLACEHOLDER"
+    end
+  end
+
+  on_linux do
+    on_intel do
+      url "https://github.com/SCGIS-Wales/dcert/releases/download/v1.0.0/dcert-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "LINUX_X86_SHA256_PLACEHOLDER"
+    end
+  end
 
   def install
-    system "cargo", "install", *std_cargo_args
+    bin.install "dcert"
   end
 
   test do
