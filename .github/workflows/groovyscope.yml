@@ -1,0 +1,82 @@
+# Keeps Formula/groovyscope.rb at the latest groovyscope release on PyPI. The formula is rendered by
+# scripts/homebrew_formula.py from SCGIS-Wales/groovyscope, installed and tested on macOS from this tap,
+# and committed only when `brew test` passes. Runs daily and on demand; nothing to configure.
+name: groovyscope formula
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to render (default the latest on PyPI)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: groovyscope-formula
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: render, test and commit
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+    steps:
+      - name: Check out the tap
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Check out the formula renderer
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: SCGIS-Wales/groovyscope
+          path: groovyscope-src
+          sparse-checkout: scripts
+          persist-credentials: false
+
+      - name: Decide the version
+        id: version
+        env:
+          REQUESTED: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          latest="${REQUESTED:-$(curl -fsSL https://pypi.org/pypi/groovyscope/json | python3 -c 'import json,sys; print(json.load(sys.stdin)["info"]["version"])')}"
+          current="$(sed -n 's|.*/groovyscope-\([0-9][0-9.]*\)\.tar\.gz".*|\1|p' Formula/groovyscope.rb | head -1)"
+          echo "PyPI: ${latest}; formula: ${current:-none}"
+          echo "version=${latest}" >> "$GITHUB_OUTPUT"
+          if [ "${latest}" = "${current}" ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Render the formula
+        if: steps.version.outputs.changed == 'true'
+        run: python3 groovyscope-src/scripts/homebrew_formula.py --version "${{ steps.version.outputs.version }}" --wait 600 --output Formula/groovyscope.rb
+
+      - name: Commit locally
+        if: steps.version.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/groovyscope.rb
+          git commit -m "groovyscope ${{ steps.version.outputs.version }}"
+
+      - name: Install and test from this checkout
+        if: steps.version.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          brew tap scgis-wales/tap "$GITHUB_WORKSPACE"
+          # Homebrew 7 asks before using formulae from third-party taps; this tap is ours.
+          if brew commands | grep -qx trust; then brew trust scgis-wales/tap; fi
+          brew install --build-from-source scgis-wales/tap/groovyscope
+          brew test scgis-wales/tap/groovyscope
+          groovyscope version
+
+      - name: Push
+        if: steps.version.outputs.changed == 'true'
+        run: git push origin HEAD:main
