@@ -3,8 +3,8 @@ class Groovyscope < Formula
 
   desc "Groovy 5/6 code intelligence (LSP and MCP) for AI coding agents such as Kiro CLI"
   homepage "https://github.com/SCGIS-Wales/groovyscope"
-  url "https://files.pythonhosted.org/packages/38/1b/f815a3a37b270975f4c8d67ecdfb6cdd36e7e152f6a8577731e8d2762584/groovyscope-0.28.0.tar.gz"
-  sha256 "94b8bd03647d81b38227ef7eda85f1eb9ec40cee03cbfe794c2ddf062717bddf"
+  url "https://files.pythonhosted.org/packages/8b/93/83199679c8bd544a5d1c3d1adfc23f29ef9d77d6f499c6c5f5e34f3c8937/groovyscope-0.36.0.tar.gz"
+  sha256 "de961c4f33e6f437b845af67c1f1f548052fb3de3e4aa507432216183632df54"
   license all_of: ["Apache-2.0", "EPL-2.0", "EPL-1.0", "BSD-3-Clause", "BSD-2-Clause", "MIT"]
 
   depends_on "uv" => :build
