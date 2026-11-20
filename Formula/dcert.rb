@@ -1,13 +1,13 @@
 class Dcert < Formula
   desc "TLS certificate decoder, validator, and MCP server"
   homepage "https://github.com/SCGIS-Wales/dcert"
-  version "3.0.89"
+  version "3.0.90"
   license "MIT"
 
   on_macos do
     on_intel do
-      url "https://github.com/SCGIS-Wales/dcert/releases/download/v3.0.89/dcert-x86_64-apple-darwin.tar.gz"
-      sha256 "5c8cc090fa173ecad1a330c164da2dd2d59fef21e245c0049a735f4019adf07b"
+      url "https://github.com/SCGIS-Wales/dcert/releases/download/v3.0.90/dcert-x86_64-apple-darwin.tar.gz"
+      sha256 "6f142004eb9bd3df6fde810300d9097fed8efe75282c5052dcf55a64597223a9"
 
       def install
         bin.install "dcert"
@@ -16,8 +16,8 @@ class Dcert < Formula
     end
 
     on_arm do
-      url "https://github.com/SCGIS-Wales/dcert/releases/download/v3.0.89/dcert-aarch64-apple-darwin.tar.gz"
-      sha256 "0c370b7ffb9bba2940b34eb93558d997efbc695b88caf67f32a256ad6a6cc8fc"
+      url "https://github.com/SCGIS-Wales/dcert/releases/download/v3.0.90/dcert-aarch64-apple-darwin.tar.gz"
+      sha256 "8e8910f21a6e2aa9dce9a6b671f3d1c032ce8be29fb2fb631891a2e81bf36d24"
 
       def install
         bin.install "dcert"
@@ -28,8 +28,8 @@ class Dcert < Formula
 
   on_linux do
     on_intel do
-      url "https://github.com/SCGIS-Wales/dcert/releases/download/v3.0.89/dcert-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "2d15c2a887e77a550ebd0cc871de5063232a636970d29ef2bea2303bceef1845"
+      url "https://github.com/SCGIS-Wales/dcert/releases/download/v3.0.90/dcert-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "99be28c5ea280fda20ba59db655a6dc4599b7aad9c2fd1082fa44cabe654994a"
 
       def install
         bin.install "dcert"
